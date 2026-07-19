@@ -96,13 +96,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        let target = localStorage.getItem('cu_countdown_target');
-        const now = Date.now();
-        if (!target || parseInt(target, 10) <= now) {
-            target = (now + 7 * 24 * 60 * 60 * 1000).toString();
-            localStorage.setItem('cu_countdown_target', target);
-        }
-        const targetDate = parseInt(target, 10);
+        const targetDate = new Date('2026-08-17T00:00:00').getTime();
 
         const timer = setInterval(() => {
             const current = Date.now();

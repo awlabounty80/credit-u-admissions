@@ -47,17 +47,10 @@ export default function DormWeekRush() {
         });
 
         // Initialize target countdown
-        let target = localStorage.getItem('cu_countdown_target');
-        const nowMs = Date.now();
-        if (!target || parseInt(target, 10) <= nowMs) {
-            target = (nowMs + 7 * 24 * 60 * 60 * 1000).toString();
-            localStorage.setItem('cu_countdown_target', target);
-        }
-        const targetDateMs = parseInt(target, 10);
-
+        const targetDate = new Date('2026-08-17T00:00:00');
         const updateTimer = () => {
             const current = Date.now();
-            const diff = targetDateMs - current;
+            const diff = targetDate.getTime() - current;
             if (diff <= 0) {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
                 return;
@@ -267,14 +260,14 @@ export default function DormWeekRush() {
                     <div className="w-full max-w-md mx-auto h-[1px] bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent my-2" />
 
                     <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-xl mx-auto font-light">
-                        Official Credit U™ Dorm Week Opens <strong className="text-white">July 21, 2026</strong>. Step inside the campus orientation and secure your early founding student privileges today.
+                        Official Credit U™ Dorm Week Opens <strong className="text-white">August 17, 2026</strong>. Step inside the campus orientation and secure your early founding student privileges today.
                     </p>
                 </div>
 
                 {/* 2. DYNAMIC COUNTDOWN TIMER */}
                 <div className="max-w-xl mx-auto bg-gradient-to-b from-[#0033A0]/35 to-black/40 border border-yellow-400/30 p-6 rounded-3xl shadow-[0_0_40px_rgba(253,181,21,0.15)] text-center space-y-4">
                     <h4 className="text-xs font-black uppercase tracking-[0.2em] text-yellow-400 font-mono">
-                        Countdown to Official Opening Day (July 21, 2026)
+                        Countdown to Official Opening Day (August 17, 2026)
                     </h4>
                     
                     <div className="grid grid-cols-4 gap-3 max-w-xs sm:max-w-sm mx-auto">

@@ -95,17 +95,11 @@ export default function DormWeek() {
         }, 3200);
 
         // Initialize target countdown
-        let target = localStorage.getItem('cu_countdown_target');
-        const nowMs = Date.now();
-        if (!target || parseInt(target, 10) <= nowMs) {
-            target = (nowMs + 7 * 24 * 60 * 60 * 1000).toString();
-            localStorage.setItem('cu_countdown_target', target);
-        }
-        const targetDateMs = parseInt(target, 10);
+        const targetDate = new Date('2026-08-17T00:00:00');
 
         const updateTimer = () => {
             const current = Date.now();
-            const diff = targetDateMs - current;
+            const diff = targetDate.getTime() - current;
             if (diff <= 0) {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
                 return;
