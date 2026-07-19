@@ -47,10 +47,17 @@ export default function DormWeekRush() {
         });
 
         // Initialize target countdown
-        const targetDate = new Date('2026-07-21T00:00:00');
+        let target = localStorage.getItem('cu_countdown_target');
+        const nowMs = Date.now();
+        if (!target || parseInt(target, 10) <= nowMs) {
+            target = (nowMs + 7 * 24 * 60 * 60 * 1000).toString();
+            localStorage.setItem('cu_countdown_target', target);
+        }
+        const targetDateMs = parseInt(target, 10);
+
         const updateTimer = () => {
-            const now = new Date();
-            const diff = targetDate.getTime() - now.getTime();
+            const current = Date.now();
+            const diff = targetDateMs - current;
             if (diff <= 0) {
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
                 return;

@@ -96,10 +96,17 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const targetDate = new Date('2026-07-21T00:00:00').getTime();
+        let target = localStorage.getItem('cu_countdown_target');
+        const now = Date.now();
+        if (!target || parseInt(target, 10) <= now) {
+            target = (now + 7 * 24 * 60 * 60 * 1000).toString();
+            localStorage.setItem('cu_countdown_target', target);
+        }
+        const targetDate = parseInt(target, 10);
+
         const timer = setInterval(() => {
-            const now = new Date().getTime();
-            const diff = targetDate - now;
+            const current = Date.now();
+            const diff = targetDate - current;
             if (diff <= 0) {
                 clearInterval(timer);
                 setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
