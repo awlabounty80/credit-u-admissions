@@ -8,6 +8,7 @@ import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper
 
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
+    const [isPaused, setIsPaused] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
@@ -137,17 +138,24 @@ export default function Home() {
                     autoPlay 
                     playsInline 
                     className="w-full aspect-video object-cover" 
+                    onPlay={() => setIsPaused(false)}
+                    onPause={() => setIsPaused(true)}
+                    onEnded={() => setIsPaused(true)}
                 />
                 
                 <button
                     onClick={() => {
                         if (videoRef.current) {
-                            videoRef.current.pause();
+                            if (isPaused) {
+                                videoRef.current.play().catch(() => {});
+                            } else {
+                                videoRef.current.pause();
+                            }
                         }
                     }}
                     className="absolute bottom-4 right-4 z-20 px-2.5 py-1 bg-black/50 hover:bg-black/75 text-white/80 hover:text-white font-mono text-[9px] uppercase tracking-widest rounded border border-white/10 transition-all"
                 >
-                    Pause
+                    {isPaused ? 'Play' : 'Stop Playing'}
                 </button>
             </div>
 
