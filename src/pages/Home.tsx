@@ -8,8 +8,6 @@ import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper
 
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
-    const [isPlaying, setIsPlaying] = useState(true);
-    const [isMuted, setIsMuted] = useState(false);
     const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
@@ -122,9 +120,17 @@ export default function Home() {
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.muted = false;
-            videoRef.current.play().catch(() => {});
+            const playPromise = videoRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Browser blocked unmuted autoplay. Fallback to muted autoplay to ensure it plays immediately.
+                    if (videoRef.current) {
+                        videoRef.current.muted = true;
+                        videoRef.current.play().catch(() => {});
+                    }
+                });
+            }
         }
-        setIsMuted(false);
     }, []);
 
     return (
@@ -137,56 +143,22 @@ export default function Home() {
                     ref={videoRef}
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
-                    muted={isMuted}
+                    controls
                     playsInline 
                     className="w-full aspect-video object-cover" 
-                    onEnded={() => setIsPlaying(false)}
-                    onPlay={() => setIsPlaying(true)}
-                    onPause={() => setIsPlaying(false)}
                 />
                 
-                {/* Custom Overlay Controls */}
-                <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
-                    <button
-                        onClick={() => {
-                            if (videoRef.current) {
-                                const nextMuted = !isMuted;
-                                videoRef.current.muted = nextMuted;
-                                setIsMuted(nextMuted);
-                            }
-                        }}
-                        className={`px-3 py-1.5 font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border transition-all flex items-center gap-1.5 ${
-                            isMuted 
-                            ? 'bg-yellow-400 hover:bg-yellow-350 text-blue-955 border-yellow-350 animate-pulse scale-105' 
-                            : 'bg-black/70 hover:bg-black/90 text-white border-white/20'
-                        }`}
-                    >
-                        {isMuted ? (
-                            <>
-                                🔊 Turn Sound On
-                            </>
-                        ) : (
-                            <>
-                                🔇 Mute Audio
-                            </>
-                        )}
-                    </button>
-
-                    {isPlaying && (
-                        <button
-                            onClick={() => {
-                                if (videoRef.current) {
-                                    videoRef.current.pause();
-                                    setIsPlaying(false);
-                                }
-                            }}
-                            className="px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
-                        >
-                            <span className="w-2 h-2 bg-white rounded-full animate-ping" />
-                            Stop Playing
-                        </button>
-                    )}
-                </div>
+                <button
+                    onClick={() => {
+                        if (videoRef.current) {
+                            videoRef.current.pause();
+                        }
+                    }}
+                    className="absolute bottom-16 right-4 z-20 px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
+                >
+                    <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                    Stop Playing
+                </button>
             </div>
 
             <div
