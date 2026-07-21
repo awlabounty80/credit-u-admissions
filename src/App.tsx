@@ -37,6 +37,12 @@ export default function App() {
             const target = e.target as HTMLElement;
             const isClickable = target.closest('button') || target.closest('a') || target.closest('[role="button"]');
             if (isClickable) {
+                // Do not ring bell or trigger confetti on assessment/application paths
+                const path = window.location.pathname;
+                if (path.includes('/free-assessment') || path.includes('/apply')) {
+                    return;
+                }
+
                 // Clear any existing timeout
                 if (ringTimeoutRef.current) {
                     window.clearTimeout(ringTimeoutRef.current);
