@@ -135,7 +135,6 @@ export default function Home() {
                     ref={videoRef}
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
-                    controls
                     playsInline 
                     className="w-full aspect-video object-cover" 
                 />
@@ -146,10 +145,9 @@ export default function Home() {
                             videoRef.current.pause();
                         }
                     }}
-                    className="absolute bottom-16 right-4 z-20 px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
+                    className="absolute bottom-4 right-4 z-20 px-2.5 py-1 bg-black/50 hover:bg-black/75 text-white/80 hover:text-white font-mono text-[9px] uppercase tracking-widest rounded border border-white/10 transition-all"
                 >
-                    <span className="w-2 h-2 bg-white rounded-full animate-ping" />
-                    Stop Playing
+                    Pause
                 </button>
             </div>
 
