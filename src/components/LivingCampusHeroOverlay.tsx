@@ -32,7 +32,7 @@ export function LivingCampusHeroOverlay() {
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <CampusButton href="/admissions" eventName="hero_enter_admissions_clicked">Enter Admissions Hall</CampusButton>
-            <CampusButton href="/assessment-preview" eventName="hero_assessment_clicked" className="bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/20">Take Free Assessment™</CampusButton>
+            <CampusButton href="/free-assessment" eventName="hero_assessment_clicked" className="bg-white/10 text-white ring-1 ring-white/25 hover:bg-white/20">Take Free Assessment™</CampusButton>
           </div>
         </div>
         <div className="rounded-[2rem] border border-white/15 bg-white/10 p-6 shadow-2xl backdrop-blur">

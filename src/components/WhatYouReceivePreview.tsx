@@ -22,7 +22,7 @@ export function WhatYouReceivePreview() {
                   <div key={line} className="rounded-2xl bg-blue-900/60 px-4 py-3 text-sm font-bold text-white">{line}</div>
                 ))}
               </div>
-              <CampusButton href="/assessment-preview" eventName="preview_card_cta_clicked" className="mt-6 w-full">{item.cta}</CampusButton>
+              <CampusButton href="/free-assessment" eventName="preview_card_cta_clicked" className="mt-6 w-full">{item.cta}</CampusButton>
             </article>
           ))}
         </div>
