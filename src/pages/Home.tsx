@@ -9,7 +9,12 @@ import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(true);
-    const [isMuted, setIsMuted] = useState(true);
+    const [showWelcomeGate, setShowWelcomeGate] = useState(() => {
+        return localStorage.getItem('cu_visited_once') !== 'true';
+    });
+    const [isMuted, setIsMuted] = useState(() => {
+        return localStorage.getItem('cu_visited_once') !== 'true';
+    });
     const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
@@ -119,8 +124,55 @@ export default function Home() {
         return () => clearInterval(timer);
     }, []);
 
+    useEffect(() => {
+        if (!showWelcomeGate && videoRef.current) {
+            videoRef.current.play().catch(() => {});
+        }
+    }, [showWelcomeGate]);
+
     return (
         <div className="relative min-h-[90vh] flex flex-col items-center justify-start py-12 overflow-x-hidden pb-24">
+            {showWelcomeGate && (
+                <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-blue-955/95 backdrop-blur-2xl transition-all duration-700">
+                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(253,181,21,0.15),transparent_60%)] pointer-events-none" />
+                    
+                    <div className="max-w-md w-full px-6 text-center space-y-8 relative z-10">
+                        {/* Seal */}
+                        <div className="w-24 h-24 mx-auto bg-yellow-400/10 border border-yellow-400/30 rounded-full flex items-center justify-center shadow-2xl">
+                            <img src="/credit-cow-master-seal.png" alt="Credit U Seal" className="w-16 h-16 object-contain" />
+                        </div>
+
+                        <div className="space-y-3">
+                            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-yellow-400 font-mono block">
+                                Registrar's Office ///
+                            </span>
+                            <h2 className="text-3xl sm:text-4xl font-black italic tracking-tighter uppercase text-white leading-none">
+                                Welcome to <br />
+                                <span className="text-yellow-400">Credit University™</span>
+                            </h2>
+                            <p className="text-xs text-blue-100 font-light leading-relaxed max-w-xs mx-auto">
+                                You are about to step inside the official pre-registration & campus orientation portal.
+                            </p>
+                        </div>
+
+                        <button
+                            onClick={() => {
+                                setShowWelcomeGate(false);
+                                localStorage.setItem('cu_visited_once', 'true');
+                                setIsMuted(false);
+                                if (videoRef.current) {
+                                    videoRef.current.muted = false;
+                                    videoRef.current.play().catch(() => {});
+                                }
+                            }}
+                            className="w-full py-4 text-xs font-black uppercase tracking-widest bg-yellow-400 hover:bg-yellow-350 text-blue-955 rounded-xl shadow-xl shadow-yellow-950/20 transition-all transform hover:scale-[1.02] active:scale-95 animate-pulse"
+                        >
+                            🎓 Enter Campus & Play unmuted
+                        </button>
+                    </div>
+                </div>
+            )}
+
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
             <div className="w-full relative z-10 border-b-4 border-[#001b57] group">
