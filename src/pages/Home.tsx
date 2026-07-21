@@ -219,7 +219,7 @@ export default function Home() {
                     <div className="w-full pt-4">
                         <div className="bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-500 rounded-3xl p-0.5 shadow-2xl">
                             <div className="bg-[#002270] rounded-[22px] overflow-hidden aspect-video relative border border-yellow-300/20 shadow-inner">
-                                <video src="/credit-u-opening.mp4" autoPlay loop muted controls playsInline className="w-full h-full object-cover" />
+                                <video src="/untitled-video-1.mp4" autoPlay loop muted controls playsInline className="w-full h-full object-cover" />
                             </div>
                         </div>
                     </div>
