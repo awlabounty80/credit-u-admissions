@@ -120,16 +120,7 @@ export default function Home() {
     useEffect(() => {
         if (videoRef.current) {
             videoRef.current.muted = false;
-            const playPromise = videoRef.current.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Browser blocked unmuted autoplay. Fallback to muted autoplay to ensure it plays immediately.
-                    if (videoRef.current) {
-                        videoRef.current.muted = true;
-                        videoRef.current.play().catch(() => {});
-                    }
-                });
-            }
+            videoRef.current.play().catch(() => {});
         }
     }, []);
 
