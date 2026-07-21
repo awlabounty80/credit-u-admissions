@@ -120,33 +120,8 @@ export default function Home() {
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
-            // Autoplay muted to bypass browser blocks
-            video.muted = true;
+            video.muted = false;
             video.play().catch(() => {});
-
-            const autoUnmute = () => {
-                if (video) {
-                    video.muted = false;
-                    video.play().catch(() => {});
-                }
-                cleanup();
-            };
-
-            const cleanup = () => {
-                window.removeEventListener('mousemove', autoUnmute);
-                window.removeEventListener('scroll', autoUnmute);
-                window.removeEventListener('click', autoUnmute);
-                window.removeEventListener('keydown', autoUnmute);
-                window.removeEventListener('touchstart', autoUnmute);
-            };
-
-            window.addEventListener('mousemove', autoUnmute);
-            window.addEventListener('scroll', autoUnmute);
-            window.addEventListener('click', autoUnmute);
-            window.addEventListener('keydown', autoUnmute);
-            window.addEventListener('touchstart', autoUnmute);
-
-            return cleanup;
         }
     }, []);
 
@@ -161,7 +136,6 @@ export default function Home() {
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
                     controls
-                    muted
                     playsInline 
                     className="w-full aspect-video object-cover" 
                 />
