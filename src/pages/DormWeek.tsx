@@ -68,8 +68,21 @@ export default function DormWeek() {
         activateMission800: false
     });
 
-    // Countdown clock state targetting July 21, 2026
-    const [timeLeft, setTimeLeft] = useState({ days: 19, hours: 8, minutes: 15, seconds: 0 });
+    const calculateTimeLeft = () => {
+        const targetDate = new Date('2026-07-28T00:00:00').getTime();
+        const diff = targetDate - Date.now();
+        if (diff <= 0) {
+            return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+        return {
+            days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((diff % (1000 * 60)) / 1000)
+        };
+    };
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
 
     // Announcer Quotes
     const announcerLines = [
@@ -94,25 +107,9 @@ export default function DormWeek() {
             setAnnouncerIndex(prev => (prev + 1) % announcerLines.length);
         }, 3200);
 
-        // Initialize target countdown
-        const targetDate = new Date('2026-07-28T00:00:00');
-
-        const updateTimer = () => {
-            const current = Date.now();
-            const diff = targetDate.getTime() - current;
-            if (diff <= 0) {
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-                return;
-            }
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            setTimeLeft({ days, hours, minutes, seconds });
-        };
-
-        updateTimer();
-        const interval = setInterval(updateTimer, 1000);
+        const interval = setInterval(() => {
+            setTimeLeft(calculateTimeLeft());
+        }, 1000);
 
         return () => {
             clearInterval(announcerInterval);

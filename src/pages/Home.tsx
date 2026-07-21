@@ -9,7 +9,22 @@ import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPaused, setIsPaused] = useState(false);
-    const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
+
+    const calculateTimeLeft = () => {
+        const targetDate = new Date('2026-07-28T00:00:00').getTime();
+        const diff = targetDate - Date.now();
+        if (diff <= 0) {
+            return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+        }
+        return {
+            days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+            hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+            minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+            seconds: Math.floor((diff % (1000 * 60)) / 1000)
+        };
+    };
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft);
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
         email: '',
@@ -98,22 +113,8 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const targetDate = new Date('2026-07-28T00:00:00').getTime();
-
         const timer = setInterval(() => {
-            const current = Date.now();
-            const diff = targetDate - current;
-            if (diff <= 0) {
-                clearInterval(timer);
-                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-            } else {
-                setTimeLeft({
-                    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                    hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-                    minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-                    seconds: Math.floor((diff % (1000 * 60)) / 1000)
-                });
-            }
+            setTimeLeft(calculateTimeLeft());
         }, 1000);
         return () => clearInterval(timer);
     }, []);
