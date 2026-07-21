@@ -29,7 +29,7 @@ export default function AdmissionsLayout({ children }: LayoutProps) {
             <div className="w-full bg-[#001b57] border-b border-yellow-500/20 py-2.5 px-4 text-center z-50 sticky top-0 shadow-sm">
                 <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-[10px] md:text-xs font-black uppercase tracking-wider text-yellow-350">
                     <span className="inline-block w-2.5 h-2.5 rounded-full bg-yellow-400 animate-pulse flex-shrink-0" />
-                    <span>Before Credit U Dorms open July 21st — Join now for only $39 + $39 tuition fee.</span>
+                    <span>Before Credit U Dorms open July 28th — Join now for only $39 + $39 tuition fee.</span>
                 </div>
             </div>
 
