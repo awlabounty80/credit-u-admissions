@@ -603,7 +603,7 @@ export default function DormWeek() {
                         {/* Video Element */}
                         <video
                             ref={videoRef}
-                            src="/dorm-week-vd.mp4"
+                            src="/credit-u-opening.mp4"
                             className="w-full aspect-[16/9] object-cover"
                             loop
                             muted={isMuted}

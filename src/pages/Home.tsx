@@ -135,7 +135,7 @@ export default function Home() {
             <div className="w-full relative z-10 border-b-4 border-[#001b57] group">
                 <video 
                     ref={videoRef}
-                    src="/credit-u-opening.mp4" 
+                    src="/cu-landing-vd.mp4" 
                     autoPlay 
                     playsInline 
                     className="w-full aspect-video object-cover" 
