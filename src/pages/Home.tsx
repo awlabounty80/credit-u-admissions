@@ -9,6 +9,7 @@ import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper
 export default function Home() {
     const videoRef = useRef<HTMLVideoElement>(null);
     const [isPlaying, setIsPlaying] = useState(true);
+    const [isMuted, setIsMuted] = useState(true);
     const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
@@ -127,8 +128,7 @@ export default function Home() {
                     ref={videoRef}
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
-                    muted 
-                    controls 
+                    muted={isMuted}
                     playsInline 
                     className="w-full aspect-video object-cover" 
                     onEnded={() => setIsPlaying(false)}
@@ -136,20 +136,48 @@ export default function Home() {
                     onPause={() => setIsPlaying(false)}
                 />
                 
-                {isPlaying && (
+                {/* Custom Overlay Controls */}
+                <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
                     <button
                         onClick={() => {
                             if (videoRef.current) {
-                                videoRef.current.pause();
-                                setIsPlaying(false);
+                                const nextMuted = !isMuted;
+                                videoRef.current.muted = nextMuted;
+                                setIsMuted(nextMuted);
                             }
                         }}
-                        className="absolute bottom-4 right-4 z-20 px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
+                        className={`px-3 py-1.5 font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border transition-all flex items-center gap-1.5 ${
+                            isMuted 
+                            ? 'bg-yellow-400 hover:bg-yellow-350 text-blue-955 border-yellow-350 animate-pulse scale-105' 
+                            : 'bg-black/70 hover:bg-black/90 text-white border-white/20'
+                        }`}
                     >
-                        <span className="w-2 h-2 bg-white rounded-full animate-ping" />
-                        Stop Playing
+                        {isMuted ? (
+                            <>
+                                🔊 Turn Sound On
+                            </>
+                        ) : (
+                            <>
+                                🔇 Mute Audio
+                            </>
+                        )}
                     </button>
-                )}
+
+                    {isPlaying && (
+                        <button
+                            onClick={() => {
+                                if (videoRef.current) {
+                                    videoRef.current.pause();
+                                    setIsPlaying(false);
+                                }
+                            }}
+                            className="px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
+                        >
+                            <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                            Stop Playing
+                        </button>
+                    )}
+                </div>
             </div>
 
             <div
