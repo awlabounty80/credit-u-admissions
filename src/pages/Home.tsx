@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock } from 'lucide-react';
@@ -7,6 +7,8 @@ import CreditUAssessmentFunnelCard from '../components/CreditUAssessmentFunnelCa
 import { CampusEnhancementWrapper } from '../components/CampusEnhancementWrapper';
 
 export default function Home() {
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const [isPlaying, setIsPlaying] = useState(true);
     const [timeLeft, setTimeLeft] = useState({ days: 18, hours: 14, minutes: 45, seconds: 20 });
     const [waitlistForm, setWaitlistForm] = useState({
         firstName: '',
@@ -96,7 +98,7 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        const targetDate = new Date('2026-08-17T00:00:00').getTime();
+        const targetDate = new Date('2026-07-28T00:00:00').getTime();
 
         const timer = setInterval(() => {
             const current = Date.now();
@@ -120,8 +122,34 @@ export default function Home() {
         <div className="relative min-h-[90vh] flex flex-col items-center justify-start py-12 overflow-x-hidden pb-24">
             <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-full max-w-4xl h-96 bg-blue-500/10 rounded-full blur-[100px] pointer-events-none" />
 
-            <div className="w-full relative z-10 border-b-4 border-[#001b57]">
-                <video src="/cu-landing-vd.mp4" autoPlay loop muted controls playsInline className="w-full aspect-video object-cover" />
+            <div className="w-full relative z-10 border-b-4 border-[#001b57] group">
+                <video 
+                    ref={videoRef}
+                    src="/cu-landing-vd.mp4" 
+                    autoPlay 
+                    muted 
+                    controls 
+                    playsInline 
+                    className="w-full aspect-video object-cover" 
+                    onEnded={() => setIsPlaying(false)}
+                    onPlay={() => setIsPlaying(true)}
+                    onPause={() => setIsPlaying(false)}
+                />
+                
+                {isPlaying && (
+                    <button
+                        onClick={() => {
+                            if (videoRef.current) {
+                                videoRef.current.pause();
+                                setIsPlaying(false);
+                            }
+                        }}
+                        className="absolute bottom-4 right-4 z-20 px-3 py-1.5 bg-red-600/80 hover:bg-red-700 text-white font-mono font-bold text-[10px] uppercase tracking-wider rounded-lg shadow-lg border border-red-500 transition-all flex items-center gap-1.5"
+                    >
+                        <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                        Stop Playing
+                    </button>
+                )}
             </div>
 
             <div

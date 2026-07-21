@@ -95,7 +95,7 @@ export default function DormWeek() {
         }, 3200);
 
         // Initialize target countdown
-        const targetDate = new Date('2026-08-17T00:00:00');
+        const targetDate = new Date('2026-07-28T00:00:00');
 
         const updateTimer = () => {
             const current = Date.now();
