@@ -172,6 +172,7 @@ export default function Home() {
                     ref={videoRef}
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
+                    muted
                     playsInline 
                     className="w-full aspect-video object-cover" 
                     onPlay={() => setIsPaused(false)}
