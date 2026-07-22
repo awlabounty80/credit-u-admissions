@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Database, GraduationCap, ArrowRight } from 'lucide-react';
+import { Database, GraduationCap, ArrowRight, Download, X, Share } from 'lucide-react';
 import FloatingMotes from './FloatingMotes';
 
 interface LayoutProps {
@@ -10,7 +10,37 @@ interface LayoutProps {
 export default function AdmissionsLayout({ children }: LayoutProps) {
     const location = useLocation();
     const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'disclosures' | null>(null);
-    
+    const [installPrompt, setInstallPrompt] = useState<any>(null);
+    const [showIOSGuide, setShowIOSGuide] = useState(false);
+
+    useEffect(() => {
+        const handleBeforeInstallPrompt = (e: Event) => {
+            e.preventDefault();
+            setInstallPrompt(e);
+        };
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+        return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    }, []);
+
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || (navigator as any).standalone;
+
+    const handleInstallClick = async () => {
+        if (isIOS) {
+            setShowIOSGuide(true);
+            return;
+        }
+        if (!installPrompt) {
+            alert('To install the app, tap your browser menu and select "Install App" or "Add to Home Screen".');
+            return;
+        }
+        installPrompt.prompt();
+        const { outcome } = await installPrompt.userChoice;
+        if (outcome === 'accepted') {
+            setInstallPrompt(null);
+        }
+    };
+
     // Check active page to display/hide headers or highlight links
     const isHome = location.pathname === '/';
     const isApply = location.pathname === '/apply';
@@ -54,6 +84,17 @@ export default function AdmissionsLayout({ children }: LayoutProps) {
                 </nav>
 
                 <div className="flex items-center gap-3">
+                    {!isStandalone && (
+                        <button 
+                            type="button"
+                            onClick={handleInstallClick}
+                            className="inline-flex items-center justify-center gap-1 rounded-xl font-bold transition-all bg-[#001b57] hover:bg-[#001b57]/80 text-yellow-400 border border-yellow-400/20 shadow-md text-xs uppercase py-2.5 px-4 h-9"
+                        >
+                            <Download className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Download App</span>
+                            <span className="sm:hidden">App</span>
+                        </button>
+                    )}
                     {!isApply && !isResults && !isAdmin && (
                         <Link to="/apply">
                             <button className="inline-flex items-center justify-center gap-1 rounded-xl font-bold transition-all bg-yellow-400 hover:bg-yellow-300 text-blue-900 shadow-md shadow-yellow-950/20 text-xs uppercase py-2.5 px-4 h-9">
@@ -161,6 +202,49 @@ export default function AdmissionsLayout({ children }: LayoutProps) {
                                 CLOSE
                             </button>
                         </div>
+                    </div>
+                </div>
+            )}
+            {/* iOS PWA Installation Guide Modal */}
+            {showIOSGuide && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md">
+                    <div className="bg-[#001a4d] border-4 border-yellow-400 rounded-3xl p-6 max-w-sm w-full space-y-6 text-center shadow-2xl relative">
+                        <button
+                            type="button"
+                            onClick={() => setShowIOSGuide(false)}
+                            className="absolute top-4 right-4 text-slate-400 hover:text-white"
+                        >
+                            <X className="w-5 h-5" />
+                        </button>
+                        
+                        <div className="space-y-2">
+                            <span className="text-3xl">📲</span>
+                            <h3 className="text-lg font-black uppercase text-white font-mono">Install Credit U App</h3>
+                            <p className="text-[11px] text-slate-400">Add the Admissions Portal directly to your iPhone home screen for instant access.</p>
+                        </div>
+
+                        <div className="bg-slate-950/60 p-4 rounded-2xl border border-white/5 text-left text-xs space-y-4 font-mono">
+                            <div className="flex items-start gap-3">
+                                <span className="bg-yellow-400 text-blue-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">1</span>
+                                <p className="text-slate-300">Tap the <span className="inline-flex items-center text-yellow-350"><Share className="w-3.5 h-3.5 mx-1 inline" /> Share button</span> at the bottom of Safari.</p>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="bg-yellow-400 text-blue-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">2</span>
+                                <p className="text-slate-300">Scroll down the menu list and tap <span className="text-yellow-350">"Add to Home Screen"</span>.</p>
+                            </div>
+                            <div className="flex items-start gap-3">
+                                <span className="bg-yellow-400 text-blue-950 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold flex-shrink-0">3</span>
+                                <p className="text-slate-300">Tap <span className="text-yellow-350">"Add"</span> in the top-right corner to complete installation.</p>
+                            </div>
+                        </div>
+
+                        <button 
+                            type="button"
+                            onClick={() => setShowIOSGuide(false)}
+                            className="w-full py-3 bg-yellow-400 hover:bg-yellow-300 text-blue-950 font-black text-xs uppercase rounded-xl tracking-wider transition-all shadow-md"
+                        >
+                            Got It 👍
+                        </button>
                     </div>
                 </div>
             )}
