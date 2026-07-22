@@ -81,7 +81,8 @@ export default function Admin() {
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
-        if (passwordInput === 'DeanAshley800') {
+        const cleanedInput = passwordInput.trim().toLowerCase();
+        if (cleanedInput === 'deanashley800') {
             setIsAuthenticated(true);
             setAuthError(false);
             sessionStorage.setItem('cu_admin_authenticated', 'true');
