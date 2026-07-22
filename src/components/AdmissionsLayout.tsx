@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Database, GraduationCap, ArrowRight, Download, X, Share } from 'lucide-react';
+import { Database, GraduationCap, ArrowRight, Download, X, Share, Menu } from 'lucide-react';
 import FloatingMotes from './FloatingMotes';
 
 interface LayoutProps {
@@ -12,6 +12,7 @@ export default function AdmissionsLayout({ children }: LayoutProps) {
     const [activeModal, setActiveModal] = useState<'privacy' | 'terms' | 'disclosures' | null>(null);
     const [installPrompt, setInstallPrompt] = useState<any>(null);
     const [showIOSGuide, setShowIOSGuide] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleBeforeInstallPrompt = (e: Event) => {
@@ -103,8 +104,103 @@ export default function AdmissionsLayout({ children }: LayoutProps) {
                             </button>
                         </Link>
                     )}
+                    <button 
+                        type="button"
+                        onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                        className="xl:hidden p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white transition-all focus:outline-none"
+                        aria-label="Toggle Mobile Menu"
+                    >
+                        {isMobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+                    </button>
                 </div>
             </header>
+
+            {/* Mobile Navigation Drawer */}
+            {isMobileMenuOpen && (
+                <div className="xl:hidden fixed inset-0 z-30 bg-blue-950/95 backdrop-blur-md pt-[98px] flex flex-col p-6 animate-fadeIn">
+                    <nav className="flex flex-col gap-6 text-xs font-black uppercase tracking-wider text-slate-300 mt-8">
+                        <Link 
+                            to="/" 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            Home
+                        </Link>
+                        <Link 
+                            to="/free-assessment" 
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="text-yellow-400 hover:text-yellow-300 transition-colors py-2 border-b border-yellow-400/10"
+                        >
+                            Free Assessment™
+                        </Link>
+                        <a 
+                            href="#transcript" 
+                            onClick={(e) => { 
+                                setIsMobileMenuOpen(false);
+                                if (isHome) { 
+                                    e.preventDefault(); 
+                                    document.getElementById('transcript')?.scrollIntoView({ behavior: 'smooth' }); 
+                                } 
+                            }} 
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            Transcript Review
+                        </a>
+                        <a 
+                            href="#summer-session" 
+                            onClick={(e) => { 
+                                setIsMobileMenuOpen(false);
+                                if (isHome) { 
+                                    e.preventDefault(); 
+                                    document.getElementById('summer-session')?.scrollIntoView({ behavior: 'smooth' }); 
+                                } 
+                            }} 
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            Summer Session
+                        </a>
+                        <a 
+                            href="#dorm-week" 
+                            onClick={(e) => { 
+                                setIsMobileMenuOpen(false);
+                                if (isHome) { 
+                                    e.preventDefault(); 
+                                    document.getElementById('dorm-week')?.scrollIntoView({ behavior: 'smooth' }); 
+                                } 
+                            }} 
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            Dorm Week Rush
+                        </a>
+                        <a 
+                            href="#waitlist" 
+                            onClick={(e) => { 
+                                setIsMobileMenuOpen(false);
+                                if (isHome) { 
+                                    e.preventDefault(); 
+                                    document.getElementById('waitlist')?.scrollIntoView({ behavior: 'smooth' }); 
+                                } 
+                            }} 
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            Waitlist
+                        </a>
+                        <a 
+                            href="#about-dean" 
+                            onClick={(e) => { 
+                                setIsMobileMenuOpen(false);
+                                if (isHome) { 
+                                    e.preventDefault(); 
+                                    document.getElementById('about-dean')?.scrollIntoView({ behavior: 'smooth' }); 
+                                } 
+                            }} 
+                            className="hover:text-white transition-colors py-2 border-b border-white/5"
+                        >
+                            About Dean Ashley
+                        </a>
+                    </nav>
+                </div>
+            )}
 
             {/* Main Content Area */}
             <main className="flex-1 flex flex-col">
