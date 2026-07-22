@@ -122,37 +122,43 @@ export default function Home() {
     useEffect(() => {
         const video = videoRef.current;
         if (video) {
-            // Autoplay muted to bypass browser blocks
-            video.muted = true;
-            video.play().catch(() => {});
+            // First attempt to play unmuted immediately
+            video.muted = false;
+            const playPromise = video.play();
 
-            const autoUnmute = () => {
-                if (video) {
-                    video.muted = false;
-                    video.play().catch(() => {
-                        // If unmuted playback is blocked, revert to muted so it continues playing
-                        video.muted = true;
-                        video.play().catch(() => {});
-                    });
-                }
-                cleanup();
-            };
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Fallback: start playing muted so it plays immediately on block
+                    video.muted = true;
+                    video.play().catch(() => {});
 
-            const cleanup = () => {
-                window.removeEventListener('scroll', autoUnmute);
-                window.removeEventListener('click', autoUnmute);
-                window.removeEventListener('mousedown', autoUnmute);
-                window.removeEventListener('keydown', autoUnmute);
-                window.removeEventListener('touchstart', autoUnmute);
-            };
+                    // Unmute and play on any passive user interaction
+                    const autoUnmute = () => {
+                        if (video) {
+                            video.muted = false;
+                            video.play().catch(() => {
+                                video.muted = true;
+                                video.play().catch(() => {});
+                            });
+                        }
+                        cleanup();
+                    };
 
-            window.addEventListener('scroll', autoUnmute);
-            window.addEventListener('click', autoUnmute);
-            window.addEventListener('mousedown', autoUnmute);
-            window.addEventListener('keydown', autoUnmute);
-            window.addEventListener('touchstart', autoUnmute);
+                    const cleanup = () => {
+                        window.removeEventListener('scroll', autoUnmute);
+                        window.removeEventListener('click', autoUnmute);
+                        window.removeEventListener('mousedown', autoUnmute);
+                        window.removeEventListener('keydown', autoUnmute);
+                        window.removeEventListener('touchstart', autoUnmute);
+                    };
 
-            return cleanup;
+                    window.addEventListener('scroll', autoUnmute);
+                    window.addEventListener('click', autoUnmute);
+                    window.addEventListener('mousedown', autoUnmute);
+                    window.addEventListener('keydown', autoUnmute);
+                    window.addEventListener('touchstart', autoUnmute);
+                });
+            }
         }
     }, []);
 
@@ -166,7 +172,6 @@ export default function Home() {
                     ref={videoRef}
                     src="/cu-landing-vd.mp4" 
                     autoPlay 
-                    muted
                     playsInline 
                     className="w-full aspect-video object-cover" 
                     onPlay={() => setIsPaused(false)}
