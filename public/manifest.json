@@ -1,0 +1,17 @@
+{
+  "short_name": "Credit U",
+  "name": "Credit U Admissions",
+  "icons": [
+    {
+      "src": "/credit-cow-master-seal.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "background_color": "#001A4D",
+  "theme_color": "#FDB515",
+  "display": "standalone",
+  "orientation": "portrait"
+}
