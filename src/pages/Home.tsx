@@ -129,22 +129,26 @@ export default function Home() {
             const autoUnmute = () => {
                 if (video) {
                     video.muted = false;
-                    video.play().catch(() => {});
+                    video.play().catch(() => {
+                        // If unmuted playback is blocked, revert to muted so it continues playing
+                        video.muted = true;
+                        video.play().catch(() => {});
+                    });
                 }
                 cleanup();
             };
 
             const cleanup = () => {
-                window.removeEventListener('mousemove', autoUnmute);
                 window.removeEventListener('scroll', autoUnmute);
                 window.removeEventListener('click', autoUnmute);
+                window.removeEventListener('mousedown', autoUnmute);
                 window.removeEventListener('keydown', autoUnmute);
                 window.removeEventListener('touchstart', autoUnmute);
             };
 
-            window.addEventListener('mousemove', autoUnmute);
             window.addEventListener('scroll', autoUnmute);
             window.addEventListener('click', autoUnmute);
+            window.addEventListener('mousedown', autoUnmute);
             window.addEventListener('keydown', autoUnmute);
             window.addEventListener('touchstart', autoUnmute);
 
